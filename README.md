@@ -1,35 +1,35 @@
-# Kubernates
+# Kubernetes
 
-Kubernates is a powerfull software used to manage containers in production. With the kubernates is possible create
+Kubernetes is a powerfull software used to manage containers in production. With the kubernetes is possible create
 escalable applications.
 
 ![img.png](img.png)
 
-## [Basic kubernates components](https://kubernetes.io/docs/concepts/architecture/)
+## [Basic kubernetes components](https://kubernetes.io/docs/concepts/architecture/)
 
 - **Cluster:** is a set of nodes;
-- **Node:** A node is a worker machine where the kubernate is run;
+- **Node:** A node is a worker machine where the kubernete is run;
 - **Master:** is a node that controls the cluster;
 - **Pod:** is a conteiner that runs in a node. A pod can have one or more containers;
 
 ## [Control Plane components](https://kubernetes.io/docs/concepts/overview/components/#kubelet)
 
 - **Kube-apiserver:** this component is API used for users (panel admins, CLI's etc.) and other components for control
-  the kubernates;
+  the kubernetes;
 - **etcd:** is a key-value store used for store neccessary configurations for manage nodes, pods and clusters;
 - **kube-scheduler:** is a component that schedule pods to run in the nodes;
 - **kube-controller-manager:** is a component that runs controllers of the kube. Is the brain of the cluster;
 - **container-runtime:** is the responsible for run the containers (usually docker);
 - **kubelet:** is a component that runs in each node and is responsible for manage the node and the pods in the node;
 
-## Kubernates workloads
+## Kubernetes workloads
 
-In kubernates is possible create workloads using yaml or json files and CLI commands. In the next captions we
+In kubernetes is possible create workloads using yaml or json files and CLI commands. In the next captions we
 see as create pods, replicasets, deployments and services using yaml files.
 
 ### [Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 
-In kubernates is possible to define a pod in a node using commands and yaml files. The yaml files is most recomended
+In kubernetes is possible to define a pod in a node using commands and yaml files. The yaml files is most recomended
 because with the files is possible to versioning the definitions. Bellow has a example of a pod definition:
 
 ```yaml
@@ -48,7 +48,7 @@ spec:
           value: env-value
 ```
 
-The properties apiVersion, kind, metadata and spec e default os all definitions in kubernates. In the **apiVersion** the
+The properties apiVersion, kind, metadata and spec e default os all definitions in kubernetes. In the **apiVersion** the
 value is **v1** for pods, the **kind** is Pod, the **metadata** is the **name** of the pod and the **spec** are the
 definition of the pod. In the spec we describind the containers that will run in the pod and your properties, as
 enviroments variables and the image.
@@ -217,12 +217,12 @@ kubectl rollout restart deployment/frontend                      # Rolling resta
 
 ## Network
 
-In the kubernates by default the pods of the cluster has a unique IP and by default the pods can comunicate between each
+In the kubernetes by default the pods of the cluster has a unique IP and by default the pods can comunicate between each
 other without declare links for this.
 
 ### [Services](https://kubernetes.io/docs/concepts/services-networking/service/)
 
-For allow external access for the pods is necessary create a kubernates service. This resource is used to define wich
+For allow external access for the pods is necessary create a kubernetes service. This resource is used to define wich
 ports is opened to external access. Bellows has a example of a service definition:
 
 ```yaml
@@ -241,7 +241,7 @@ spec:
       targetPort: 8080
 ```
 
-The kubernate possibilite create
+The kubernete possibilite create
 many [types of services](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types):
 
 **ClusterIP:** expose the service in an internal ip of the cluster. Is util for comunication beteween services and this
@@ -265,6 +265,7 @@ spec:
   ports:
   - port: 80
     targetPort: 8080
+    nodePort: 8080
 ```
 
 - **LoadBalancer:** provision external access through a load balancer for the service in some cloud providers. In the cloud providers that not
