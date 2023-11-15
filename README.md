@@ -80,7 +80,8 @@ kubectl get pods -o wide # return informations about pods with more details
 
 ### [Replicasets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
-Replicasets is a workload resource for manage the pods. The replicasets is used to create and manage pods. Whith replicasets is
+Replicasets is a workload resource for manage the pods. The replicasets is used to create and manage pods. Whith
+replicasets is
 possible create many replicas of the pods. Bellow has an example of a replicasets definition:
 
 ```yaml
@@ -135,11 +136,16 @@ kubectl delete replicaset <replicaset-name> # delete the replicaset
 
 ### [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 
-Deployment is a workload resource used to manage pods and replicasets. With the deployment is possible create, destroy, and run
+Deployment is a workload resource used to manage pods and replicasets. With the deployment is possible create, destroy,
+and run
 rollback in fail case. The deployments is very interestin because is possible create state for the aplication, and its
 automatizate the deployment os pods os the replicaset. For example if you need change a new version of the images of the
 pods, with the deployment this action is automatizated: the deployment create a new replicaset with the new version, and
 replace the pods os the old replicaset for the pods of new replicaset. Is powerfull!
+
+Deployment has two strategies for create the new replicaset: **Recreate** and **RollingUpdate**. In the **Recreate**
+strategy all pods are killed and then the new pods was started. In the **RollingUpdate** strategy the new replicaset is
+created and each old pod is stoped and replaced by new started pod of new replicaset.
 
 Bellow has a example of a deployment definition:
 
@@ -191,6 +197,7 @@ kubectl create deployment deployment-example --image=nginx --replicas=3
 For manage the deployments we're using bellow commands:
 
 ```shell
+kubectl set image deployment/<deployment-name> www=image:v2 # Update the image of the application container of the deployment
 kubectl get deployments # list all deployments
 kubectl describe deployments # return all informations about created deployments
 kubectl describe deployments <deployment-name> # return all informations about deployment
