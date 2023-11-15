@@ -22,12 +22,12 @@ escalable applications.
 - **container-runtime:** is the responsible for run the containers (usually docker);
 - **kubelet:** is a component that runs in each node and is responsible for manage the node and the pods in the node;
 
-## Kubernates objects definitions
+## Kubernates workloads definitions
 
-In kubernates is possible create objects and configurations using yaml files and CLI commands. In the next captions we
+In kubernates is possible create workloads using yaml or json files and CLI commands. In the next captions we
 see as create pods, replicasets, deployments and services using yaml files.
 
-### Pods
+### [Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 
 In kubernates is possible to define a pod in a node using commands and yaml files. The yaml files is most recomended
 because with the files is possible to versioning the definitions. Bellow has a example of a pod definition:
@@ -78,9 +78,9 @@ kubectl edit pod <pod-name> # open a atual description of the pod for editing
 kubectl get pods -o wide # return informations about pods with more details
 ```
 
-### Replicasets
+### [Replicasets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
-Replicasets is a object the manage the pods. The replicasets is used to create and manage pods. Whith replicasets is
+Replicasets is a workload resource for manage the pods. The replicasets is used to create and manage pods. Whith replicasets is
 possible create many replicas of the pods. Bellow has an example of a replicasets definition:
 
 ```yaml
@@ -130,6 +130,80 @@ kubectl get replicasets # list all replicasets
 kubectl describe replicasets # return all informations about created replicasets
 kubectl describe replicasets <replicaset-name> # return all informations about replicaset
 kubectl get replicasets -o wide # return informations about replicasets with more details
+kubectl delete replicaset <replicaset-name> # delete the replicaset
 ```
 
-### Deployments
+### [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+Deployment is a workload resource used to manage pods and replicasets. With the deployment is possible create, destroy, and run
+rollback in fail case. The deployments is very interestin because is possible create state for the aplication, and its
+automatizate the deployment os pods os the replicaset. For example if you need change a new version of the images of the
+pods, with the deployment this action is automatizated: the deployment create a new replicaset with the new version, and
+replace the pods os the old replicaset for the pods of new replicaset. Is powerfull!
+
+Bellow has a example of a deployment definition:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: mywebsite
+    tier: frontend
+spec:
+  replicas: 4
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+  selector:
+    matchLabels:
+      app: myapp
+```
+
+In these defintion the kind is Deployment, the metadata is simililar the others resources, but in the spec we have the
+properties of
+definition a replicaset.
+
+For apply the deployment definition is necessary use the command **kubectl apply**:
+
+```shell
+kubectl apply -f deployment-definition.yaml
+```
+
+#### [Deployment commands](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+For create a deployment is necessary use the command **kubectl create**. When we create a deployment using the command,
+the kubectl automatically create a replicaset and a pod. Is possible informate the replicas quantity with
+the `--replicas`
+flag. Bellow has a example of a deployment creation:
+
+```shell
+kubectl create deployment deployment-example --image=nginx --replicas=3
+```
+
+For manage the deployments we're using bellow commands:
+
+```shell
+kubectl get deployments # list all deployments
+kubectl describe deployments # return all informations about created deployments
+kubectl describe deployments <deployment-name> # return all informations about deployment
+kubectl get deployments -o wide # return informations about deployments with more details
+kubectl delete deployment <deployment-name> # delete the deployment
+```
+
+For manage states of deployments is possible use the command **kubectl rollout**:
+
+```shell
+kubectl rollout history deployment/frontend                      # Check the history of deployments including the revision
+kubectl rollout undo deployment/frontend                         # Rollback to the previous deployment
+kubectl rollout undo deployment/frontend --to-revision=2         # Rollback to a specific revision
+kubectl rollout status -w deployment/frontend                    # Watch rolling update status of "frontend" deployment until completion
+kubectl rollout restart deployment/frontend                      # Rolling restart of the "frontend" deployment
+```
