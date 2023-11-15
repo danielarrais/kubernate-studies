@@ -22,7 +22,7 @@ escalable applications.
 - **container-runtime:** is the responsible for run the containers (usually docker);
 - **kubelet:** is a component that runs in each node and is responsible for manage the node and the pods in the node;
 
-## Kubernates workloads definitions
+## Kubernates workloads
 
 In kubernates is possible create workloads using yaml or json files and CLI commands. In the next captions we
 see as create pods, replicasets, deployments and services using yaml files.
@@ -214,3 +214,88 @@ kubectl rollout undo deployment/frontend --to-revision=2         # Rollback to a
 kubectl rollout status -w deployment/frontend                    # Watch rolling update status of "frontend" deployment until completion
 kubectl rollout restart deployment/frontend                      # Rolling restart of the "frontend" deployment
 ```
+
+## Network
+
+In the kubernates by default the pods of the cluster has a unique IP and by default the pods can comunicate between each
+other without declare links for this.
+
+### [Services](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+For allow external access for the pods is necessary create a kubernates service. This resource is used to define wich
+ports is opened to external access. Bellows has a example of a service definition:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: image-processing
+  labels:
+    app: myapp
+spec:
+  type: ClusterIP
+  selector:
+    tier: backend # label of pods
+  ports:
+    - port: 80
+      targetPort: 8080
+```
+
+The kubernate possibilite create
+many [types of services](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types):
+
+**ClusterIP:** expose the service in an internal ip of the cluster. Is util for comunication beteween services and this
+is default type.
+
+```shell
+spec:
+  type: ClusterIP # Optional field (default)
+  clusterIP: 10.10.0.1 # within service cluster ip range
+  ports:
+  - port: 80
+    targetPort: 8080
+```
+
+- **NodePort:** extends the ClusterIP and expose a port os your pods for external access. By default automatically is
+  created a ClusterIP for you cluster.
+
+```shell
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+```
+
+- **LoadBalancer:** provision external access through a load balancer for the service in some cloud providers. In the cloud providers that not
+  support load balancer is necessary use a external load balancer.
+
+```shell
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+```
+
+## Utils links:
+
+- [Great basic kubernetes course](https://www.udemy.com/course/learn-kubernetes)
+- [Architecture](https://kubernetes.io/docs/concepts/architecture/)
+- [Components](https://kubernetes.io/docs/concepts/overview/components/#kubelet)
+- [Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
+- [Replicasets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+- [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Network](https://kubernetes.io/docs/concepts/services-networking/)
+  - [Services](https://kubernetes.io/docs/concepts/services-networking/service/)
+  - [Services Types](https://www.baeldung.com/ops/kubernetes-service-types)
+- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+- [kubectl Commands](https://kubernetes.io/docs/reference/kubectl/kubectl-cmds/)
+
+## Next steps
+
+- [Storage](https://kubernetes.io/docs/concepts/storage/)
+- [Configuration Best Practices](https://kubernetes.io/docs/concepts/configuration/overview/)
+- [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+- [Diference between kubectl apply and create](https://www.baeldung.com/ops/kubectl-apply-create)
